@@ -18,8 +18,10 @@ package org.springframework.boot.autoconfigure.hazelcast;
 
 import com.hazelcast.core.HazelcastInstance;
 
+import com.hazelcast.jet.JetInstance;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingClass;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -27,7 +29,8 @@ import org.springframework.context.annotation.Import;
 /**
  * {@link EnableAutoConfiguration Auto-configuration} for Hazelcast. Creates a
  * {@link HazelcastInstance} based on explicit configuration or when a default
- * configuration file is found in the environment.
+ * configuration file is found in the environment unless {@link JetInstance} is
+ * on the classpath.
  *
  * @author Stephane Nicoll
  * @author Vedran Pavic
@@ -36,6 +39,7 @@ import org.springframework.context.annotation.Import;
  */
 @Configuration(proxyBeanMethods = false)
 @ConditionalOnClass(HazelcastInstance.class)
+@ConditionalOnMissingClass("com.hazelcast.jet.JetInstance")
 @EnableConfigurationProperties(HazelcastProperties.class)
 @Import({ HazelcastClientConfiguration.class, HazelcastServerConfiguration.class })
 public class HazelcastAutoConfiguration {
